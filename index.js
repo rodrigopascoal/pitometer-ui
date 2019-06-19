@@ -32,10 +32,10 @@ function S4() {
   return (((1+Math.random())*0x10000)|0).toString(16).substring(1); 
 }
 
-function getOptions(start, end, context, runId, individualResults) {
+function getOptions(start, end, context, runId, compareContext, individualResults) {
   return {
     context: context + "/" + runId,
-    // compareContext : "keptn-project-1/keptn-service-1/stageabc/" + keptn_context_guid,
+    compareContext : compareContext, // "keptn-project-1/keptn-service-1/stageabc/" + keptn_context_guid,
     individualResults : individualResults,
     timeStart: +start / 1000,
     timeEnd: +end / 1000,
@@ -71,9 +71,7 @@ async function testRun(perfspecfile, tags, options) {
   var perfSpecJSON = JSON.parse(perfSpecContent);
 
   // run PerfSpec
-  var runResult = pitometer.run(perfSpecJSON, options);
-
-  return await Promise.all([runResult]);
+  return pitometer.run(perfSpecJSON, options);
 }
 
 /**
@@ -84,7 +82,7 @@ async function testRun(perfspecfile, tags, options) {
  * @param {*} callback function(err, outputstring): will be called with the output string as param
  */
 function testReport(context, reportId, outputfile, callback) {
-  var options = getOptions(null, null, context, "dummy", true);
+  var options = getOptions(null, null, context, "dummy", 5, true);
 
   // 6: Generate Report of previous test runs
   pitometer.query(options).then(results => {
@@ -120,23 +118,32 @@ function testReport(context, reportId, outputfile, callback) {
  * @param {*} count how many iterations
  * @param {*} context 
  */
-async function runPitometerTests(startTime, length, count, context, tags) {
-  for(var i=0;i<count;i++) {
-    var endTime = new Date(startTime.getTime() + length);
+async function runPitometerTests(startTime, length, from, to, context, tags) {
+  if(from == to) return;
 
-    var options = getOptions(startTime, endTime, context, "testrun_" + i, true);
-    var runResults = testRun("./perfspec.json", tags, options);
+  var endTime = new Date(startTime.getTime() + length);
 
-    var results = await Promise.all([runResults]);
-    // console.log(JSON.stringify(results));
+  // compareContext for last successful run
+  compareContext = { find : {result : "pass"}, sort : {timestamp : -1}, limit : 1}
+  var options = getOptions(startTime, endTime, context, "testrun_" + from, compareContext, true);
+
+  // run it for the current timeframe!
+  testRun("./perfspec.json", tags, options).then(result => {
+    console.log("run done:" + from + JSON.stringify(result));
 
     // move start time
     startTime = endTime;
-  }
+    runPitometerTests(startTime, length, from+1, to, context, tags);
+  });
 }
 
 // Context for Pitometer -> this is the mongo collection data ends up
 const context = "/keptn-sample/simplenodeservice/prod-keptnsample";
+
+// =========================================================================================
+// Run one of the following scenarios by commenting them out
+// make sure to have your mongodb and your secrets.json ready!
+// =========================================================================================
 
 // 1: Remove old data
 // testDropData(context);
@@ -146,8 +153,8 @@ const context = "/keptn-sample/simplenodeservice/prod-keptnsample";
 start = new Date("2019-06-18T08:00:00+00:00");
 length = 60000 * 10; // 10 Minutes
 count = 6
-runPitometerTests(start, length, count, context, ["environment:prod-keptnsample","service:simplenodeservice"]);
+runPitometerTests(start, length, 1, count, context, ["environment:prod-keptnsample","service:simplenodeservice"]);
 */
 
 // 3: generate a test report
-testReport(context, "report1", "./report1.html");
+// testReport(context, "report1", "./report1.html");
