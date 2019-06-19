@@ -1,0 +1,45 @@
+{
+    "spec_version": "1.0",
+    "indicators": [
+        {
+            "id": "ResponseTime_Service",
+            "comment" : "Just look at 90th Percentile of Response Time and compare it with a static threshold",
+            "source": "Dynatrace",
+            "query": {
+                "timeseriesId": "com.dynatrace.builtin:service.responsetime",
+                "aggregation": "p90",
+                "tags" : TAG_PLACEHOLDER
+            },
+            "grading": {
+                "type": "Threshold",
+                "thresholds": {
+                    "upperSevere": 1000000,
+                    "upperWarning": 800000
+                },
+                "metricScore": 50
+            }
+        },
+        {
+            "id": "FailureRate_Service",
+            "comment" : "Look at the Max Failurerate",
+            "source": "Dynatrace",
+            "query": {
+                "timeseriesId": "com.dynatrace.builtin:service.failurerate",
+                "aggregation": "max",
+                "tags" : TAG_PLACEHOLDER
+            },
+            "grading": {
+                "type": "Threshold",
+                "thresholds": {
+                    "upperSevere": 10,
+                    "upperWarning": 2
+                },
+                "metricScore": 50
+            }
+        }       
+    ],
+    "objectives": {
+        "pass": 90,
+        "needsreview": 75
+    }
+}

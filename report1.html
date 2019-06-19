@@ -1,0 +1,116 @@
+<html>
+<title>Pitometer report: report1</title>
+<head>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+</head>
+<body>
+
+<div id="Score"></div>
+<script type='text/javascript'>
+Highcharts.chart('Score', {
+
+    title: {
+        text: 'Showing: Score'
+    },
+    chart: {
+        type: 'column'
+    },
+    xAxis: {
+        categories: ["testrun_0","testrun_1","testrun_2","testrun_3","testrun_4","testrun_5"]
+    },
+    /*yAxis: {
+        title: {
+            text: 'yaxisPlaceholder'
+        }
+    },*/
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    /*plotOptions: {
+        series: {
+            pointStart: timestamp_placeholder
+        }
+    },*/
+
+	series: [{"name":"Score","data":[{"name":"testrun_0","y":100,"color":"#00FF00"},{"name":"testrun_1","y":100,"color":"#00FF00"},{"name":"testrun_2","y":100,"color":"#00FF00"},{"name":"testrun_3","y":100,"color":"#00FF00"},{"name":"testrun_4","y":100,"color":"#00FF00"},{"name":"testrun_5","y":100,"color":"#00FF00"}]}]
+});
+</script>
+
+<div id="ResponseTime_Service_SERVICE-5000D1F400E70197"></div>
+<script type='text/javascript'>
+Highcharts.chart('ResponseTime_Service_SERVICE-5000D1F400E70197', {
+
+    title: {
+        text: 'Showing: ResponseTime_Service_SERVICE-5000D1F400E70197'
+    },
+    chart: {
+        type: 'line'
+    },
+    xAxis: {
+        categories: ["testrun_0","testrun_1","testrun_2","testrun_3","testrun_4","testrun_5"]
+    },
+    /*yAxis: {
+        title: {
+            text: 'yaxisPlaceholder'
+        }
+    },*/
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    /*plotOptions: {
+        series: {
+            pointStart: timestamp_placeholder
+        }
+    },*/
+
+	series: [{"color":"#0000FF","name":"value","data":[["testrun_0",397621.1200804344],["testrun_1",397303.9927398057],["testrun_2",395088.9404908303],["testrun_3",397634.6932288732],["testrun_4",398143.78758765967],["testrun_5",399537.5179493902]]},{"color":"#FF0000","name":"upperSevere","data":[["testrun_0",1000000],["testrun_1",1000000],["testrun_2",1000000],["testrun_3",1000000],["testrun_4",1000000],["testrun_5",1000000]]},{"color":"#FFFF00","name":"upperWarning","data":[["testrun_0",800000],["testrun_1",800000],["testrun_2",800000],["testrun_3",800000],["testrun_4",800000],["testrun_5",800000]]}]
+});
+</script>
+
+<div id="FailureRate_Service_SERVICE-5000D1F400E70197"></div>
+<script type='text/javascript'>
+Highcharts.chart('FailureRate_Service_SERVICE-5000D1F400E70197', {
+
+    title: {
+        text: 'Showing: FailureRate_Service_SERVICE-5000D1F400E70197'
+    },
+    chart: {
+        type: 'line'
+    },
+    xAxis: {
+        categories: ["testrun_0","testrun_1","testrun_2","testrun_3","testrun_4","testrun_5"]
+    },
+    /*yAxis: {
+        title: {
+            text: 'yaxisPlaceholder'
+        }
+    },*/
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    /*plotOptions: {
+        series: {
+            pointStart: timestamp_placeholder
+        }
+    },*/
+
+	series: [{"color":"#0000FF","name":"value","data":[["testrun_0",0],["testrun_1",0],["testrun_2",0],["testrun_3",0],["testrun_4",0],["testrun_5",0]]},{"color":"#FF0000","name":"upperSevere","data":[["testrun_0",10],["testrun_1",10],["testrun_2",10],["testrun_3",10],["testrun_4",10],["testrun_5",10]]},{"color":"#FFFF00","name":"upperWarning","data":[["testrun_0",2],["testrun_1",2],["testrun_2",2],["testrun_3",2],["testrun_4",2],["testrun_5",2]]}]
+});
+</script>
+
+<div id="placeholder"/>
+
+
+
+
+</html>
