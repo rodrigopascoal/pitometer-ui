@@ -1,0 +1,82 @@
+<html>
+        <style>
+                .topRow {position: absolute;top:0px;left: 0px;bottom: 50%; right: 100%;background-color: #33342D;}
+                .bottomRow {position: absolute;top:50%;left: 0px;bottom: 100%; right: 100%;background-color: #33342D;}
+        </style>
+
+    <title>Welcome to the Pitometer Test UI</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+    <body>
+        <div class="leftColumn">
+
+            <div>
+                Pitometer connected to Mongo: MONGODB
+                Pitometer Dynatrace Data Source: DYNATRACEURL
+            </div>
+
+            <div>
+            Actions:
+            </div>
+            <div>
+                <button id="cleardb">Clear Database</button>
+            </div>
+            <div>
+                Perfspec: <input type="text" id="perfspec" value="./perfspec.json" />
+                Starttime: <input type="text" id="start" value="2019-06-18T08:00:00" />
+                Length of evaluation (in ms): <input type="text" id="length" value="60000" />
+                Number of evaluations: <input type="text" id="count" value="6" />
+                Test Run Index for first run: <input type="text" id="testRunIx" value="1" />
+                Tags: <input type="text" id="tags" value='["environment:prod-keptnsample","service:simplenodeservice"]' />
+                Compare With: <input type="text" id="comparecontext" value="" />
+                <button id="run">Run Pitometer</button>
+            </div>
+            <div>
+                Number of test results: <input type="text" id="reportcount" value="6" />
+                <button id="report">Generate Report</button>
+            </div>
+        </div>
+
+        <div class="rightColumn">
+            <iframe id="iframe2" height="100%" width="100%" src="SELFURL/empty"></iframe>
+        </div>
+
+
+        <script>	
+            function getRESTEndpoint() {
+                 return window.location.href;
+            }
+                
+            function executeCall(requestString) {
+                var fullURL = getRESTEndpoint() + requestString;
+                
+                document.getElementById('iframe2').src = fullURL;
+            }
+
+            $("#cleardb").click(function () {	
+                if(window.confirm("You really want to delete all data in your database?")) {
+                    executeCall("api/cleardb");
+                }
+            });            
+            
+            $("#run").click(function () {
+                if(window.confirm("You really want to run this test? Just want to make sure!")) {
+                    var perfspec = $('#perfspec').val();
+                    var start = $('#start').val();
+                    var length = $('#length').val();
+                    var count = $('#count').val();
+                    var testRunIx = $('#testRunIx').val();
+                    var tags = $('#tags').val();
+                    var comparecontext = $('#comparecontext').val();
+                    executeCall("api/run?perfspec=" + perfspec + "&start=" + start + "&length=" + length + "&count=" + count + "&testRunIx=" + testRunIx + "&tags=" + tags + "&comparecontext=" + comparecontext);
+                }
+            });
+
+            $("#report").click(function () {	
+                var reportcount = $('#reportcount').val();
+                executeCall("api/report?count=" + reportcount);
+            });            
+        </script>
+
+    </body>
+</html>

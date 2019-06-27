@@ -7,8 +7,7 @@
             "source": "Dynatrace",
             "query": {
                 "timeseriesId": "com.dynatrace.builtin:service.responsetime",
-                "aggregation": "p90",
-                "tags" : TAG_PLACEHOLDER
+                "aggregation": "p90"
             },
             "grading": {
                 "type": "Threshold",
