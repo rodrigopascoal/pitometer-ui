@@ -1,4 +1,5 @@
 <html>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <style>
                 .topRow {position: absolute;top:0px;left: 0px;bottom: 50%; right: 100%;background-color: #33342D;}
                 .bottomRow {position: absolute;top:50%;left: 0px;bottom: 100%; right: 100%;background-color: #33342D;}
@@ -8,32 +9,85 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
     <body>
-        <div class="leftColumn">
+        <div class="container-fluid">
 
-            <div>
-                Pitometer connected to Mongo: MONGODB
-                Pitometer Dynatrace Data Source: DYNATRACEURL
+            <div class="row">
+                <div class="col-md-6"><h3>Pitometer connected to Mongo: MONGODB</h3></div>
+                <div class="col-md-6"><h3>Pitometer Dynatrace Data Source: DYNATRACEURL</h3></div>
             </div>
 
-            <div>
-            Actions:
+            <div class="row">
+                <div class="col-sm-2">
+                    <button id="cleardb" class="btn btn-danger">Clear Database</button>
+                </div>
             </div>
-            <div>
-                <button id="cleardb">Clear Database</button>
+            
+            <div class="row">
+                <div class="col-sm-2">
+                    <button id="run" class="btn btn-info">Run Pitometer</button>
+                </div>        
+                <div class="col">
+                    <div class="row">
+                        <div class="col">                        
+                            <div class="form-group">
+                                <label for="start">Starttime</label>
+                                <input type="text" id="start" class="form-control" value="2019-06-18T08:00:00" />
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="length">Length of evaluation (in ms)</label>
+                                <input type="text" id="length" class="form-control" value="60000" />
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                    <label for="count">Number of evaluations</label>
+                                    <input type="text" id="count" class="form-control" value="6" />
+                            </div>
+                        </div>
+            
+                        <div class="col">                        
+                            <div class="form-group">
+                                <label for="perfspec">Perfspec file</label>
+                                <input type="text" id="perfspec" class="form-control" value="./perfspec.json" />
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                    <label for="testRunIx">Test Run Index for first run</label>
+                                    <input type="text" id="testRunIx" class="form-control" value="1" />
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                    <label for="tags">Tags</label>
+                                    <input type="text" id="tags" class="form-control" value='["environment:prod-keptnsample","service:simplenodeservice"]' />
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                    <label for="comparecontext">Compare With</label>
+                                    <input type="text" id="comparecontext" class="form-control" value="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>
-                Perfspec: <input type="text" id="perfspec" value="./perfspec.json" />
-                Starttime: <input type="text" id="start" value="2019-06-18T08:00:00" />
-                Length of evaluation (in ms): <input type="text" id="length" value="60000" />
-                Number of evaluations: <input type="text" id="count" value="6" />
-                Test Run Index for first run: <input type="text" id="testRunIx" value="1" />
-                Tags: <input type="text" id="tags" value='["environment:prod-keptnsample","service:simplenodeservice"]' />
-                Compare With: <input type="text" id="comparecontext" value="" />
-                <button id="run">Run Pitometer</button>
-            </div>
-            <div>
-                Number of test results: <input type="text" id="reportcount" value="6" />
-                <button id="report">Generate Report</button>
+            <div class="row">
+                <div class="col-sm-2">
+                    <button id="report" class="btn btn-success">Generate Report</button>
+                </div>        
+                <div class="col">
+                    <div class="form-group">
+                        <label for="reportcount">Number of test results</label>
+                        <input type="text" class="form-control" id="reportcount" value="6" />
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -75,8 +129,12 @@
             $("#report").click(function () {	
                 var reportcount = $('#reportcount').val();
                 executeCall("api/report?count=" + reportcount);
-            });            
+            });                 
         </script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
     </body>
 </html>
