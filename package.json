@@ -11,15 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/grabnerandi/pitometer-test.git"
+    "url": "git+https://github.com/pitometer/pitometer-ui.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/grabnerandi/pitometer-test/issues"
+    "url": "https://github.com/pitometer/pitometer-ui/issues"
   },
-  "homepage": "https://github.com/grabnerandi/pitometer-test#readme",
+  "homepage": "https://github.com/pitometer/pitometer-ui#readme",
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.6",
