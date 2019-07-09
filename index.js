@@ -54,31 +54,11 @@ function S4() {
 function getOptions(start, end, context, runId, compareContext, individualResults) {
   return {
     context: context + "/" + runId,
-    compareContext: compareContext, // "keptn-project-1/keptn-service-1/stageabc/" + keptn_context_guid,
+    compareContext: compareContext,
     individualResults: individualResults,
     timeStart: +start / 1000,
     timeEnd: +end / 1000,
   }
-}
-
-keptn_context_guid = (S4() + S4() + "-" + S4() + "-4" + S4().substr(0, 3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
-var end = new Date();
-var start = new Date(new Date().setDate(new Date().getDate() - 2));
-
-keptn_context_guid = "85c4dee1-663d-42c0-b78a-044a1ead4eff";
-start = new Date("2019-06-18T10:50:29+00:00");
-end = new Date("2019-06-18T11:00:29+00:00");
-
-/**
- * Drops all data from the data store
- * @param {*} context
- */
-function testDropData(context) {
-  if (!mongodb) return;
-
-  mongodb.removeAllFromDatabase(context, function (err, result) {
-    console.log("remove all from database: " + result);
-  });
 }
 
 /**
@@ -138,18 +118,19 @@ function testReport(context, compareContext, reportId, outputfile, callback) {
 
 /**
  * This function allows you to run multiple pitometer tests sequentially. It starts the first evaluation with startTime and length as time period.
- * From and To are Index counters as this function calls itself recursively and increments From each iteration. It also uses From to postfix the TestRun_XX to identify each run
+ * testRunIx is the index that is used for a single run and will be incremented each time this method gets called. This will be used as a post for TestRun_XX to uniquely identify each run
+ * count will be decreased with each run and the recursive calls will end if count is down to 0
  * @param {*} perfSpecFile perfspec.json filename
  * @param {*} startTime date object from when we start
  * @param {*} length time length in milliseconds
- * @param {*} from current test run
- * @param {*} to last test run to be executed
+ * @param {*} testRunIx current test run
+ * @param {*} count last test run to be executed
  * @param {*} context
  * @param {*} tags dynatrace tags that will replace TAG_PLACEHOLDER in spec file
  * @param {*} compareContext allows you to specify a compare context passed to pitometer. if null or not provided it will default to compare with last successful run
  */
-async function runPitometerTests(perfSpecFile, startTime, length, from, to, context, tags, compareContext, callback) {
-  if (from == to) {
+async function runPitometerTests(perfSpecFile, startTime, length, testRunIx, count, context, tags, compareContext, callback) {
+  if (count <= 0) {
     if (callback)
       callback(null, "Finished runs!");
     return;
@@ -163,13 +144,13 @@ async function runPitometerTests(perfSpecFile, startTime, length, from, to, cont
     compareContext = { find: { result: "pass" }, sort: { timestamp: -1 }, limit: 1 }
   if (typeof (compareContext) == "string" && compareContext.startsWith("{"))
     compareContext = JSON.parse(compareContext);
-  var options = getOptions(startTime, endTime, context, "testrun_" + from, compareContext, true);
+  var options = getOptions(startTime, endTime, context, "testrun_" + testRunIx, compareContext, true);
 
   // run it for the current timeframe!
   testRun(perfSpecFile, tags, options).then(result => {
     // move start time to the next iteration slot
     startTime = endTime;
-    runPitometerTests(perfSpecFile, startTime, length, from + 1, to, context, tags, compareContext, callback);
+    runPitometerTests(perfSpecFile, startTime, length, testRunIx + 1, count - 1, context, tags, compareContext, callback);
   }).catch(error => {
     if (callback)
       callback(error, null);
