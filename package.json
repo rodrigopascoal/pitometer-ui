@@ -1,0 +1,35 @@
+{
+  "name": "pitometer-ui",
+  "version": "1.0.0",
+  "description": "WORK IN PROGRESS. Plan is to merge this into the keptn project!",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "npx tsc",
+    "docs": "npx typedoc --module commonjs --out docs/ --exclude '**/__tests__/*' --readme README.md src/ && touch docs/.nojekyll",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grabnerandi/pitometer-test.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/grabnerandi/pitometer-test/issues"
+  },
+  "homepage": "https://github.com/grabnerandi/pitometer-test#readme",
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^11.13.2",
+    "chai": "^4.2.0",
+    "pitometer": "file:../pitometer",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^6.1.2",
+    "tslint": "^5.15.0",
+    "tslint-config-airbnb": "^5.11.1",
+    "typescript": "^3.4.2"
+  }
+}
