@@ -67,8 +67,9 @@ typings/
 .tmp
 
 # Dist directory
-dist/
+
 
 # IDE
 **/.idea
 .vscode
+report1.html
