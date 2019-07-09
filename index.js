@@ -179,11 +179,11 @@ async function runPitometerTests(perfSpecFile, startTime, length, from, to, cont
 
 
 // Context for Pitometer -> this is the mongo collection data ends up
-const context = "/keptn-sample/simplenodeservice/prod-keptnsample";
+// const context = "/keptn-sample/simplenodeservice/prod-keptnsample";
 
 function logHttpResponse(res, err, result) {
   if(err) {
-    res.write(err);
+    res.write(err.toString());
   } else 
   if(result) {
     res.write(result);
@@ -201,7 +201,8 @@ var server = http.createServer(function (req, res) {
     var url = require('url').parse(req.url, true);
 
     if(req.url.startsWith("/api/cleardb")) {
-      console.log("/cleardb");
+      var context = url.query["context"];
+      console.log("/cleardb:" + context);
 
       if(mongodb) {
         mongodb.removeAllFromDatabase(context, function(err,result) {
@@ -212,6 +213,7 @@ var server = http.createServer(function (req, res) {
       }
     } else 
     if(req.url.startsWith("/api/run")) {
+      var context = url.query["context"];
       var start = new Date(url.query["start"]);
       var length = parseInt(url.query["length"]);
       var count = parseInt(url.query["count"]);
@@ -232,8 +234,9 @@ var server = http.createServer(function (req, res) {
     } else 
     if(req.url.startsWith("/api/report")) {
       var count = parseInt(url.query["count"]);
+      var context = url.query["context"];
 
-      console.log("/api/report: " + count)
+      console.log("/api/report: " + context + ", " + count)
 
       testReport(context, count, "report1", "./report1.html", function(err, result) {
         logHttpResponse(res, err, result);

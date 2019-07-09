@@ -17,6 +17,16 @@
             </div>
             <div class="row">
                 <div class="col-sm-2">
+                </div>
+                <div class="col">                        
+                    <div class="form-group">
+                        <label for="start">Test Context: This becomes the table test result data is stored in!</label>
+                        <input type="text" id="context" class="form-control" value="testproject/pre-prod/serviceA" />
+                    </div>
+                </div>
+            </div>            
+            <div class="row">
+                <div class="col-sm-2">
                     <button id="cleardb" class="btn btn-danger">Clear Database</button>
                 </div>
             </div>
@@ -107,13 +117,15 @@
             }
 
             $("#cleardb").click(function () {	
-                if(window.confirm("You really want to delete all data in your database?")) {
-                    executeCall("api/cleardb");
+                var context = $('#context').val();
+                if(window.confirm("You really want to delete all data for '" + context + "'?")) {
+                    executeCall("api/cleardb?context=" + context);
                 }
             });            
             
             $("#run").click(function () {
                 if(window.confirm("You really want to run this test? Just want to make sure!")) {
+                    var context = $('#context').val();
                     var perfspec = $('#perfspec').val();
                     var start = $('#start').val();
                     var length = $('#length').val();
@@ -121,13 +133,14 @@
                     var testRunIx = $('#testRunIx').val();
                     var tags = $('#tags').val();
                     var comparecontext = $('#comparecontext').val();
-                    executeCall("api/run?perfspec=" + perfspec + "&start=" + start + "&length=" + length + "&count=" + count + "&testRunIx=" + testRunIx + "&tags=" + tags + "&comparecontext=" + comparecontext);
+                    executeCall("api/run?context=" + context + "&perfspec=" + perfspec + "&start=" + start + "&length=" + length + "&count=" + count + "&testRunIx=" + testRunIx + "&tags=" + tags + "&comparecontext=" + comparecontext);
                 }
             });
 
             $("#report").click(function () {	
+                var context = $('#context').val();
                 var reportcount = $('#reportcount').val();
-                executeCall("api/report?count=" + reportcount);
+                executeCall("api/report?context=" + context + "&count=" + reportcount);
             });                 
         </script>
 
