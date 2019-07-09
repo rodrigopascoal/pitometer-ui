@@ -1,8 +1,7 @@
-import { IRunResult } from '../types';
-
+import * as pitometer from '../../../pitometer';
 /**
  * Here some documentation on the runResults data structure
- * 
+ *
  * IRunResult
  * _id: 5d088eb115575705eb2a89eb,
     options:
@@ -18,7 +17,7 @@ import { IRunResult } from '../types';
     objectives: { pass: 90, needsreview: 75 },
     indicatorResults: [ [Object] ],
     result: 'fail' }
- * 
+ *
  * IndicatorResults:
  * { id: 'ResponseTime_Service',
     violations: [ [Object] ],
@@ -27,7 +26,7 @@ import { IRunResult } from '../types';
      [ [Object],
        [Object],
        [Object] ] } ]
- * 
+ *
  * IndividualResults:
 *  { metadata: null,
     value: 17342676.8,
@@ -40,7 +39,7 @@ const COLOR_BLUE = "#0000FF"
 const COLOR_RED = "#FF0000"
 const COLOR_YELLOW = "#FFFF00"
 
-export class Reporter  {
+export class Reporter {
 
     constructor() {
     }
@@ -50,8 +49,8 @@ export class Reporter  {
     };
 
     /**
-     * 
-     * @param reportSeries 
+     *
+     * @param reportSeries
      * @param seriesName e.g: value, upperSevere, ...
      * @param color color code
      * @param testRunId testrun_x
@@ -59,8 +58,8 @@ export class Reporter  {
      */
     static addTimeseries(reportSeries, seriesName, color, testRunId, value) {
         var reportSeriesValue = reportSeries.get(seriesName);
-        if(!reportSeriesValue) {
-            reportSeriesValue = {"color" : color, "name" : seriesName, "data" : []};
+        if (!reportSeriesValue) {
+            reportSeriesValue = { "color": color, "name": seriesName, "data": [] };
             reportSeries.set(seriesName, reportSeriesValue);
         }
 
@@ -70,59 +69,59 @@ export class Reporter  {
 
     /**
      * Iterates over the runResults and returns a JSON String that can be used in an HTML document to be visualized with HighCharts
-     * @param runResults 
+     * @param runResults
      */
-    public generateTimeseriesForReport(runResults : IRunResult[]) : object {       
+    public generateTimeseriesForReport(runResults: pitometer.IRunResult[]): object {
         // This Map works like this
         /**
          * "Score" :
          *  "value"  : data = [{name:"test1", y:100, color:green},{name:"test2", y:50, color:red},...]
          *  "pass"   : data = {{name:"test1", y:90}
          *  "warning": data = [{name:"test1", y:75}
-         * 
+         *
          * "ResponseTime_ServiceABC" :
          *   "value" : {name:"test1", y:1}
          *   "upperSevere" : {name:"test1", y:2}
-         * 
+         *
          * "FailureRate:"
-         *   "value" : 
-         * 
+         *   "value" :
+         *
          */
         var reportSeriesMap = new Map<String, Map<String, object>>();
 
         // this is our actual return value
-        var returnTimerseries = {xAxis : [], reportSeriesMap : null}
+        var returnTimerseries = { xAxis: [], reportSeriesMap: null }
 
         // color maps for pass, fail ...
         var colorMap = new Map([["pass", "#00FF00"], ["warning", "#FFFF00"], ["fail", "#FF0000"]]);
 
-        // this is our special metric: total score 
-        var totalScoreSeries = {"name" : "Score", "data" : []}
-        var reportSeriesScore = new Map<String,Object>();
+        // this is our special metric: total score
+        var totalScoreSeries = { "name": "Score", "data": [] }
+        var reportSeriesScore = new Map<String, Object>();
         reportSeriesScore.set("value", totalScoreSeries)
         reportSeriesMap.set("Score", reportSeriesScore)
-        
+
 
         // 1: Get the different build id's and the total score of each run
-        for(var resultIx=0;resultIx<runResults.length;resultIx++) {
+        for (var resultIx = 0; resultIx < runResults.length; resultIx++) {
             var runResult = runResults[resultIx];
             returnTimerseries.xAxis.push(runResult.testRunId);
-            totalScoreSeries.data.push({name:runResult.testRunId/*runResult.timestamp*/, y:runResult.totalScore,color:colorMap.get(runResult.result)});
+            totalScoreSeries.data.push({ name: runResult.testRunId/*runResult.timestamp*/, y: runResult.totalScore, color: colorMap.get(runResult.result) });
 
-            for(var indResIx=0;indResIx<runResult.indicatorResults.length;indResIx++) {
-                var indResult:any = runResult.indicatorResults[indResIx];
+            for (var indResIx = 0; indResIx < runResult.indicatorResults.length; indResIx++) {
+                var indResult: any = runResult.indicatorResults[indResIx];
 
                 // if we have individual results we include all of them - otherwise we just chart the score
-                if(indResult.individualResults) {
+                if (indResult.individualResults) {
                     // Individual Results have an objectkey for e.g: SERVICE1, SERVICE2, ... - therefore our metricid will be e.g: ResponseTime_Service_SERVICE1234
-                    for(var indivResIx=0;indivResIx<indResult.individualResults.length;indivResIx++) {
-                        var individualResult:any = indResult.individualResults[indivResIx];
+                    for (var indivResIx = 0; indivResIx < indResult.individualResults.length; indivResIx++) {
+                        var individualResult: any = indResult.individualResults[indivResIx];
                         var seriesId = indResult.id + "_" + individualResult.key;
 
                         // lets get the map entry for e.g: RespoinseTime_SERVICE1234 - or create it if it doesnt exists
-                        var reportSeries:any = reportSeriesMap.get(seriesId);
-                        if(!reportSeries) { 
-                            reportSeries = new Map<String, Object>() ;
+                        var reportSeries: any = reportSeriesMap.get(seriesId);
+                        if (!reportSeries) {
+                            reportSeries = new Map<String, Object>();
                             reportSeriesMap.set(seriesId, reportSeries);
                         }
 
@@ -137,8 +136,8 @@ export class Reporter  {
                     }
                 } else {
                     // We only have the global indicator result, e.g: ResponseTime_Service - thats the name we use to store that metric
-                    var reportSeries:any = reportSeriesMap.get(indResult.id);
-                    if(!reportSeries) reportSeries = {"name" : indResult.id, "data" : []};
+                    var reportSeries: any = reportSeriesMap.get(indResult.id);
+                    if (!reportSeries) reportSeries = { "name": indResult.id, "data": [] };
                     reportSeries.data.push([runResult.testRunId/*runResult.timestamp*/, indResult.value]);
                     reportSeriesMap.set(indResult.id, reportSeries);
                 }
@@ -150,21 +149,21 @@ export class Reporter  {
     }
 
     /**
-     * 
-     * @param mainReport 
-     * @param seriesTemplate 
-     * @param seriesPlaceholder 
-     * @param timeseriesData 
+     *
+     * @param mainReport
+     * @param seriesTemplate
+     * @param seriesPlaceholder
+     * @param timeseriesData
      */
-    public generateHtmlReport(mainReport:string, seriesTemplate:string, seriesPlaceholder:string, timeseriesData) : string {
-        var resultFile:string = mainReport;
+    public generateHtmlReport(mainReport: string, seriesTemplate: string, seriesPlaceholder: string, timeseriesData): string {
+        var resultFile: string = mainReport;
 
         var xAxisDefinition = JSON.stringify(timeseriesData.xAxis);
 
         // now lets get all our indicatorids - which also includes score
         var timeseriesKeys = Array.from(timeseriesData.reportSeriesMap.keys());
 
-        for(var tsIx=0;tsIx<timeseriesKeys.length;tsIx++) {
+        for (var tsIx = 0; tsIx < timeseriesKeys.length; tsIx++) {
             var timeseriesName = timeseriesKeys[tsIx];
             var timeseriesMapEntry = timeseriesData.reportSeriesMap.get(timeseriesName);
 
