@@ -7,7 +7,8 @@
   "scripts": {
     "build": "npx tsc",
     "docs": "npx typedoc --module commonjs --out docs/ --exclude '**/__tests__/*' --readme README.md src/ && touch docs/.nojekyll",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start" : "node index.js"
   },
   "repository": {
     "type": "git",
@@ -35,8 +36,8 @@
     "typescript": "^3.4.2"
   },
   "dependencies": {
-    "@keptn/pitometer": "^1.0.4",
-    "@keptn/pitometer-grader-threshold": "^1.0.1",
+    "@keptn/pitometer": "^1.1.0",
+    "@keptn/pitometer-grader-threshold": "^1.1.0",
     "@keptn/pitometer-source-dynatrace": "^1.0.1"
   }
 }

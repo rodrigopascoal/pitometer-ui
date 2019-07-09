@@ -67,7 +67,7 @@ typings/
 .tmp
 
 # Dist directory
-dist/
+
 
 # IDE
 **/.idea
