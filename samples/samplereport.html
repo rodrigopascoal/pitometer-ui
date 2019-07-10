@@ -1,0 +1,116 @@
+<html>
+<title>Pitometer report: report1</title>
+<head>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+</head>
+<body>
+
+<div id="Score"></div>
+<script type='text/javascript'>
+Highcharts.chart('Score', {
+
+    title: {
+        text: 'Showing: Score'
+    },
+    chart: {
+        type: 'column'
+    },
+    xAxis: {
+        categories: ["testrun_1","testrun_2","testrun_3","testrun_4","testrun_5","testrun_6"]
+    },
+    /*yAxis: {
+        title: {
+            text: 'yaxisPlaceholder'
+        }
+    },*/
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    /*plotOptions: {
+        series: {
+            pointStart: timestamp_placeholder
+        }
+    },*/
+
+	series: [{"name":"Score","data":[{"name":"testrun_1","y":100,"color":"#00FF00"},{"name":"testrun_2","y":100,"color":"#00FF00"},{"name":"testrun_3","y":100,"color":"#00FF00"},{"name":"testrun_4","y":100,"color":"#00FF00"},{"name":"testrun_5","y":100,"color":"#00FF00"},{"name":"testrun_6","y":100,"color":"#00FF00"}]}]
+});
+</script>
+
+<div id="ResponseTime_Service_SERVICE-5000D1F400E70197"></div>
+<script type='text/javascript'>
+Highcharts.chart('ResponseTime_Service_SERVICE-5000D1F400E70197', {
+
+    title: {
+        text: 'Showing: ResponseTime_Service_SERVICE-5000D1F400E70197'
+    },
+    chart: {
+        type: 'line'
+    },
+    xAxis: {
+        categories: ["testrun_1","testrun_2","testrun_3","testrun_4","testrun_5","testrun_6"]
+    },
+    /*yAxis: {
+        title: {
+            text: 'yaxisPlaceholder'
+        }
+    },*/
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    /*plotOptions: {
+        series: {
+            pointStart: timestamp_placeholder
+        }
+    },*/
+
+	series: [{"color":"#0000FF","name":"value","data":[["testrun_1",412376],["testrun_2",419609],["testrun_3",416702],["testrun_4",411249.5],["testrun_5",410092.5],["testrun_6",402754]]},{"color":"#FF0000","name":"upperSevere","data":[["testrun_1",null],["testrun_2",453613.6],["testrun_3",461569.9],["testrun_4",458372.2],["testrun_5",452374.45],["testrun_6",451101.75]]},{"color":"#FFFF00","name":"upperWarning","data":[["testrun_1",null],["testrun_2",432994.8],["testrun_3",440589.45],["testrun_4",437537.1],["testrun_5",431811.975],["testrun_6",430597.125]]},{"color":"#FF0000","name":"lowerSevere","data":[["testrun_1",null],["testrun_2",null],["testrun_3",null],["testrun_4",null],["testrun_5",null],["testrun_6",null]]},{"color":"#FFFF00","name":"lowerWarning","data":[["testrun_1",null],["testrun_2",null],["testrun_3",null],["testrun_4",null],["testrun_5",null],["testrun_6",null]]}]
+});
+</script>
+
+<div id="FailureRate_Service_SERVICE-5000D1F400E70197"></div>
+<script type='text/javascript'>
+Highcharts.chart('FailureRate_Service_SERVICE-5000D1F400E70197', {
+
+    title: {
+        text: 'Showing: FailureRate_Service_SERVICE-5000D1F400E70197'
+    },
+    chart: {
+        type: 'line'
+    },
+    xAxis: {
+        categories: ["testrun_1","testrun_2","testrun_3","testrun_4","testrun_5","testrun_6"]
+    },
+    /*yAxis: {
+        title: {
+            text: 'yaxisPlaceholder'
+        }
+    },*/
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    /*plotOptions: {
+        series: {
+            pointStart: timestamp_placeholder
+        }
+    },*/
+
+	series: [{"color":"#0000FF","name":"value","data":[["testrun_1",0],["testrun_2",0],["testrun_3",0],["testrun_4",0],["testrun_5",0],["testrun_6",0]]},{"color":"#FF0000","name":"upperSevere","data":[["testrun_1",10],["testrun_2",10],["testrun_3",10],["testrun_4",10],["testrun_5",10],["testrun_6",10]]},{"color":"#FFFF00","name":"upperWarning","data":[["testrun_1",2],["testrun_2",2],["testrun_3",2],["testrun_4",2],["testrun_5",2],["testrun_6",2]]},{"color":"#FF0000","name":"lowerSevere","data":[["testrun_1",null],["testrun_2",null],["testrun_3",null],["testrun_4",null],["testrun_5",null],["testrun_6",null]]},{"color":"#FFFF00","name":"lowerWarning","data":[["testrun_1",null],["testrun_2",null],["testrun_3",null],["testrun_4",null],["testrun_5",null],["testrun_6",null]]}]
+});
+</script>
+
+<div id="placeholder"/>
+
+
+
+
+</html>

@@ -104,7 +104,7 @@ function testReport(context, compareContext, reportId, outputfile, callback) {
     var outputString = reporter.generateHtmlReport(mainReport, seriesTemplate, "<div id=\"placeholder\"/>", timeseriesResults);
 
     // writing to outpout
-    if (outputfile) {
+    if (outputfile && outputfile != null) {
       fs.writeFileSync(outputfile, outputString);
     }
 
@@ -214,12 +214,32 @@ var server = http.createServer(function (req, res) {
         });
       } else
         if (req.url.startsWith("/api/report")) {
-          var count = parseInt(url.query["count"]);
+          // context can either be a string, number of JSON object
           var context = url.query["context"];
+          var reportquery = url.query["reportquery"];
+          if(reportquery != null) {
+            if(reportquery.startsWith("{")) {
+              try {
+                reportquery = JSON.parse(reportquery);
+              }
+              catch(error) {
+                console.log("Invalid JSON passed: " + error);
+                logHttpResponse(res, error, null);
+                return;
+              }
+            } else {
+              var intValue = parseInt(reportquery);
+              if(!isNaN(intValue)) {
+                reportquery = intValue;
+              }  
+            }
+          } else {
+            reportquery = 10; // default to last 10 results
+          }
 
-          console.log("/api/report: " + context + ", " + count)
+          console.log("/api/report: " + context + ", " + reportquery)
 
-          testReport(context, count, "report1", "./report1.html", function (err, result) {
+          testReport(context, reportquery, "report1", null, function (err, result) {
             logHttpResponse(res, err, result);
           });
         } else {

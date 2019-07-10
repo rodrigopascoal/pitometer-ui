@@ -93,8 +93,8 @@
                 </div>        
                 <div class="col">
                     <div class="form-group">
-                        <label for="reportcount">Number of test results</label>
-                        <input type="text" class="form-control" id="reportcount" value="6" />
+                        <label for="reportquery">Query for Report. Allowed values are number (=last X runs), string (=specific test run) or Query Object (e.g: { "find": { "result" :"pass"}, "sort" : {"timestamp" : 1}, "limit" :5})</label>
+                        <input type="text" class="form-control" id="reportquery" value="6" />
                     </div>
                 </div>
             </div>
@@ -139,8 +139,8 @@
 
             $("#report").click(function () {	
                 var context = $('#context').val();
-                var reportcount = $('#reportcount').val();
-                executeCall("api/report?context=" + context + "&count=" + reportcount);
+                var reportquery = $('#reportquery').val();
+                executeCall("api/report?context=" + context + "&reportquery=" + reportquery);
             });                 
         </script>
 
