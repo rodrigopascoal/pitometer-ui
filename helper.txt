@@ -2,13 +2,8 @@ npx tsc -w
 
 
 todos
-* extract report to pitometer-test
-* pitometer-test becomes pitometer-reportsample
 * mongoose -> ORM Mapper
 * Move from Collection per Context to "Single Collection" with Key on Context
-
-* provide example queries for "compare"
-* provide "test context" as input field
 
 Ideas
 * Mark a testrun as "Baseline Run" -> "Flag" individual test runs with a status, e.g: "ingore", "baseline", "xyz"

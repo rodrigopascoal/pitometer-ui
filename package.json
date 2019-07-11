@@ -1,7 +1,7 @@
 {
   "name": "pitometer-ui",
   "version": "1.0.0",
-  "description": "WORK IN PROGRESS. Plan is to merge this into the keptn project!",
+  "description": "Standalone Pitometer Service providing an API and a simple Web UI for running tests and generating reports!",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
