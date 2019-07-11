@@ -5,6 +5,7 @@ const MongoDbAccess = require("@keptn/pitometer").MongoDbAccess;
 const Reporter = require("./dist/Reporter").Reporter;
 const fs = require('fs');
 var http = require('http');
+var https = require('https');
 
 // Load Secrets and Config!
 const dynatraceSecrets = require("./secrets.json");
@@ -37,11 +38,6 @@ if (dynatraceSecrets.DynatraceUrl && dynatraceSecrets.DynatraceToken) {
 // 3: Add Threshold Grader
 pitometer.addGrader("Threshold", new ThresholdGrader());
 
-// 4: Create the Options object
-function S4() {
-  return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-}
-
 /**
  * This creates the options object to pass into Pitometer. It will connect context & runId
  * @param {*} start
@@ -61,6 +57,30 @@ function getOptions(start, end, context, runId, compareContext, individualResult
   }
 }
 
+async function downloadUrl(url) {
+  return new Promise((resolve,reject) => {
+    var content = "";
+    console.log("downloadUrl: " + url);
+    try {
+      https.get(url, function(res) {
+        res.on('data', function(data) {
+          content += data;
+        }).on('end', function() {
+          resolve(content);
+        }).on('error', function(err) {
+          reject(err);
+        }).on('timeout', function() {
+          reject("timeout");
+        })
+      }).on('error', function(err) {
+        reject(err);
+      });  
+    } catch(err) {
+      reject(err);
+    }
+  });
+}
+
 /**
  * testRun executes the actual pitometer run and returns. The special feature is that it parses the PERFSPEC file and replaces TAG_PLACEHOLDER with the Dynatrace Tags you can pass in tags
  * @param {*} perfspecfile filename of the perfspec file
@@ -68,8 +88,23 @@ function getOptions(start, end, context, runId, compareContext, individualResult
  * @param {*} options
  */
 async function testRun(perfspecfile, tags, options) {
-  var perfSpecContent = fs.readFileSync(perfspecfile).toString('utf-8')
-  perfSpecContent = perfSpecContent.replace(new RegExp("TAG_PLACEHOLDER", 'g'), JSON.stringify(tags));
+
+  var perfSpecContent = "";
+  try {
+    if(perfspecfile.startsWith("https")) {
+      perfSpecContent = await downloadUrl(perfspecfile);
+    } else {
+      perfSpecContent = fs.readFileSync(perfspecfile).toString('utf-8')
+    }
+  } catch(err) {
+    console.log(err);
+    throw err;
+  }
+
+  // replace tags if tags were passed!
+  if(tags && tags != null) {
+    perfSpecContent = perfSpecContent.replace(new RegExp("TAG_PLACEHOLDER", 'g'), JSON.stringify(tags));
+  }
 
   var perfSpecJSON = JSON.parse(perfSpecContent);
 
@@ -123,13 +158,14 @@ function testReport(context, compareContext, reportId, outputfile, callback) {
  * @param {*} perfSpecFile perfspec.json filename
  * @param {*} startTime date object from when we start
  * @param {*} length time length in milliseconds
+ * @param {*} testRunPrefix prefix of testrun name, e.g: testrun_
  * @param {*} testRunIx current test run
  * @param {*} count last test run to be executed
  * @param {*} context
  * @param {*} tags dynatrace tags that will replace TAG_PLACEHOLDER in spec file
  * @param {*} compareContext allows you to specify a compare context passed to pitometer. if null or not provided it will default to compare with last successful run
  */
-async function runPitometerTests(perfSpecFile, startTime, length, testRunIx, count, context, tags, compareContext, callback) {
+async function runPitometerTests(perfSpecFile, startTime, length, testRunPrefix, testRunIx, count, context, tags, compareContext, callback) {
   if (count <= 0) {
     if (callback)
       callback(null, "Finished runs!");
@@ -144,13 +180,43 @@ async function runPitometerTests(perfSpecFile, startTime, length, testRunIx, cou
     compareContext = { find: { result: "pass" }, sort: { timestamp: -1 }, limit: 1 }
   if (typeof (compareContext) == "string" && compareContext.startsWith("{"))
     compareContext = JSON.parse(compareContext);
-  var options = getOptions(startTime, endTime, context, "testrun_" + testRunIx, compareContext, true);
+  var options = getOptions(startTime, endTime, context, testRunPrefix + testRunIx, compareContext, true);
 
   // run it for the current timeframe!
   testRun(perfSpecFile, tags, options).then(result => {
     // move start time to the next iteration slot
     startTime = endTime;
-    runPitometerTests(perfSpecFile, startTime, length, testRunIx + 1, count - 1, context, tags, compareContext, callback);
+    runPitometerTests(perfSpecFile, startTime, length, testRunPrefix, testRunIx + 1, count - 1, context, tags, compareContext, callback);
+  }).catch(error => {
+    if (callback)
+      callback(error, null);
+    return;
+  });
+}
+
+/**
+ * 
+ * @param {*} perfSpecFile 
+ * @param {*} startTime 
+ * @param {*} endTime 
+ * @param {*} testRunName 
+ * @param {*} context 
+ * @param {*} tags 
+ * @param {*} compareContext 
+ * @param {*} callback 
+ */
+async function runSinglePitometerTest(perfSpecFile, startTime, endTime, testRunName, context, tags, compareContext, callback) {
+  if (!compareContext || compareContext == null || compareContext == "")
+    compareContext = { find: { result: "pass" }, sort: { timestamp: -1 }, limit: 1 }
+  if (typeof (compareContext) == "string" && compareContext.startsWith("{"))
+    compareContext = JSON.parse(compareContext);
+  var options = getOptions(startTime, endTime, context, testRunName, compareContext, true);
+
+  // run it for the current timeframe!
+  testRun(perfSpecFile, tags, options).then(result => {
+    if (callback)
+      callback(null, "Finished run!");
+    return;
   }).catch(error => {
     if (callback)
       callback(error, null);
@@ -193,23 +259,46 @@ var server = http.createServer(function (req, res) {
         logHttpResponse(res, "No database configured. Nothing cleaned!", null);
       }
     } else
-      if (req.url.startsWith("/api/run")) {
+      if (req.url.startsWith("/api/multirun")) {
         var context = url.query["context"];
         var start = new Date(url.query["start"]);
         var length = parseInt(url.query["length"]);
         var count = parseInt(url.query["count"]);
+        var testRunPrefix = url.query["testRunPrefix"];
         var testRunIx = parseInt(url.query["testRunIx"]);
         var tags = JSON.parse(url.query["tags"]);
         var compareContext = url.query["comparecontext"];
         var specFile = url.query["perfspec"];
-        // var specFile = "./perfspec.json";
-        // start = new Date("2019-06-18T08:00:00+00:00");
-        // length = 60000 * 10; // 10 Minutes
-        // count = 6
-        // testRunIx = 1
-        // tags = ["environment:prod-keptnsample","service:simplenodeservice"];
-        console.log("/api/run: " + specFile + ", " + start + ", " + length + ", " + count + ", " + testRunIx + ", " + JSON.stringify(tags) + ", " + compareContext);
-        runPitometerTests(specFile, start, length, testRunIx, count, context, tags, compareContext, function (err, result) {
+
+        // set some defaults
+        if(isNaN(length)) length=60000; // == 1 Minute
+        if(isNaN(count)) count=1;
+        if(!testRunPrefix || testRunPrefix == null || testRunPrefix == "") testRunPrefix = "testrun_";
+        if(isNaN(testRunIx)) testRunIx = 1;
+        if(!specFile || specFile == null || specFile == "") specFile = "./samples/perfspec.json";
+
+        // lets run our tests
+        console.log("/api/multirun: " + specFile + ", " + start + ", " + length + ", " + count + ", " + testRunIx + ", " + JSON.stringify(tags) + ", " + compareContext);
+        runPitometerTests(specFile, start, length, testRunPrefix, testRunIx, count, context, tags, compareContext, function (err, result) {
+          logHttpResponse(res, err, result);
+        });
+      } else
+      if (req.url.startsWith("/api/singlerun")) {
+        var context = url.query["context"];
+        var start = new Date(url.query["start"]);
+        var end = new Date(url.query["end"]);
+        var testRunName = url.query["testRunName"];
+        var tags = JSON.parse(url.query["tags"]);
+        var compareContext = url.query["comparecontext"];
+        var specFile = url.query["perfspec"];
+
+        // set some defaults
+        if(!testRunName || testRunName == null || testRunName == "") testRunName = "testrun_1";
+        if(!specFile || specFile == null || specFile == "") specFile = "./samples/perfspec.json";
+
+        // lets run our tests
+        console.log("/api/singlerun: " + specFile + ", " + start + ", " + end + ", " + testRunName + ", " + JSON.stringify(tags) + ", " + compareContext);
+        runSinglePitometerTest(specFile, start, end, testRunName, context, tags, compareContext, function (err, result) {
           logHttpResponse(res, err, result);
         });
       } else

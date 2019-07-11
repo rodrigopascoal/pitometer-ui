@@ -12,89 +12,128 @@
         <div class="container-fluid">
 
             <div class="row">
-                <div class="col-md-6"><h3>Pitometer connected to Mongo: MONGODB</h3></div>
-                <div class="col-md-6"><h3>Pitometer Dynatrace Data Source: DYNATRACEURL</h3></div>
-            </div>
-            <div class="row">
-                <div class="col-sm-2">
-                </div>
-                <div class="col">                        
-                    <div class="form-group">
-                        <label for="start">Test Context: This becomes the table test result data is stored in!</label>
-                        <input type="text" id="context" class="form-control" value="testproject/pre-prod/serviceA" />
-                    </div>
-                </div>
-            </div>            
-            <div class="row">
-                <div class="col-sm-2">
-                    <button id="cleardb" class="btn btn-danger">Clear Database</button>
-                </div>
+                <div class="col-md"><h4>Pitometer Dynatrace Data Source: DYNATRACEURL</h4></div>
+                <div class="col-md"><h4>Pitometer connected to Mongo: MONGODB</h4></div>
+                <div class="col-sm-2"><button id="cleardb" class="btn btn-danger btn-block">Clear Database</button></div>
             </div>
             <div class="row"><hr/></div>            
+
             <div class="row">
-                <div class="col-sm-2">
-                    <button id="run" class="btn btn-info">Run Pitometer</button>
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="start">Test Context: Groups your test results</label>
+                                <input type="text" id="context" class="form-control" value="testproject/pre-prod/serviceA" />
+                                <small id="context_help" class="form-text text-muted">Pitometer uses this name to store your test runs in Mongo</small>
+                            </div>
+                        </div>
+                        <div class="col">                        
+                            <div class="form-group">
+                                <label for="perfspec">Perfspec file (file or url)</label>
+                                <input type="text" id="perfspec" class="form-control" value="./samples/perfspec.json" />
+                                <small id="perfspec_help" class="form-text text-muted">Either try ./samples/perfspec.json or a public URL</small>
+                            </div>
+                        </div>                
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="tags">Tags: will replace TAG_PLACEHOLDER</label>
+                                <input type="text" id="tags" class="form-control" value='["environment:prod-keptnsample","service:simplenodeservice"]' />
+                                <small id="tags_help" class="form-text text-muted">Useful to specify Dynatrace Entity Tags!</small>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="comparecontext">Compare With</label>
+                                <input type="text" id="comparecontext" class="form-control" value="" />
+                                <small id="comparecontext_help" class="form-text text-muted">Options: EMPTY=compare w last good run; TESTRUNNAME; Pitometer Query</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>    
+            
+            <div class="row"><hr/></div>            
+            
+            <div class="row">
+                <div class="col-sm-1">
+                    <button id="singlerun" class="btn btn-info btn-block">Single Run</button>
                 </div>        
                 <div class="col">
                     <div class="row">
-                        <div class="col">                        
+                        <div class="col-sm-2">                        
+                            <div class="form-group">
+                                <label for="starttime">Starttime</label>
+                                <input type="text" id="starttime" class="form-control" value="2019-07-01T08:00:00" />
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label for="endtime">Endtime</label>
+                                <input type="text" id="endtime" class="form-control" value="2019-07-01T09:00:00" />
+                            </div>
+                        </div>                        
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label for="testRunName">Test Run Name</label>
+                                <input type="text" id="testRunName" class="form-control" value="TestRun_1" />
+                            </div>
+                        </div>
+                    </div>
+                </div>            
+            </div>
+            <div class="row">
+                <div class="col-sm-1">
+                    <button id="multirun" class="btn btn-info btn-block">Multi Run</button>
+                </div>        
+                <div class="col">
+                    <div class="row">
+                        <div class="col-sm-2">                        
                             <div class="form-group">
                                 <label for="start">Starttime</label>
                                 <input type="text" id="start" class="form-control" value="2019-07-01T08:00:00" />
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-sm-2">
                             <div class="form-group">
-                                <label for="length">Length of evaluation (in ms)</label>
+                                <label for="length">Length of each evaluation (in ms)</label>
                                 <input type="text" id="length" class="form-control" value="60000" />
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-sm-2">
                             <div class="form-group">
-                                    <label for="count">Number of evaluations</label>
-                                    <input type="text" id="count" class="form-control" value="6" />
+                                <label for="count">Number of evaluations</label>
+                                <input type="text" id="count" class="form-control" value="6" />
                             </div>
                         </div>
-            
-                        <div class="col">                        
+                        <div class="col-sm-2">
                             <div class="form-group">
-                                <label for="perfspec">Perfspec file</label>
-                                <input type="text" id="perfspec" class="form-control" value="./samples/perfspec.json" />
+                                <label for="testRunPrefix">Test Run Name Prefix</label>
+                                <input type="text" id="testRunPrefix" class="form-control" value="TestRun_" />
                             </div>
-                        </div>
-                    </div>
-
-
-                    <div class="row">
-                        <div class="col">
+                        </div>                
+                        <div class="col-sm-2">
                             <div class="form-group">
-                                    <label for="testRunIx">Test Run Index for first run</label>
-                                    <input type="text" id="testRunIx" class="form-control" value="1" />
+                                <label for="testRunIx">Test Run Name Index for first run</label>
+                                <input type="text" id="testRunIx" class="form-control" value="1" />
                             </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-group">
-                                    <label for="tags">Tags</label>
-                                    <input type="text" id="tags" class="form-control" value='["environment:prod-keptnsample","service:simplenodeservice"]' />
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-group">
-                                    <label for="comparecontext">Compare With</label>
-                                    <input type="text" id="comparecontext" class="form-control" value="" />
-                            </div>
-                        </div>
+                        </div>                
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-2">
-                    <button id="report" class="btn btn-success">Generate Report</button>
+                <div class="col-sm-1">
+                    <button id="report" class="btn btn-success btn-block">Report</button>
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="openinwindow">
+                        <label class="form-check-label" for="openinwindow">New window?</label>
+                    </div>                    
                 </div>        
                 <div class="col">
                     <div class="form-group">
-                        <label for="reportquery">Query for Report. Allowed values are number (=last X runs), string (=specific test run) or Query Object (e.g: { "find": { "result" :"pass"}, "sort" : {"timestamp" : 1}, "limit" :5})</label>
+                        <label for="reportquery">Query for Report</label>
                         <input type="text" class="form-control" id="reportquery" value="6" />
+                        <small id="reportquery_help" class="form-text text-muted">Allowed values are number (=last X runs), string (=specific test run) or Query Object (e.g: { "find": { "result" :"pass"}, "sort" : {"timestamp" : 1}, "limit" :5})</small>
                     </div>
                 </div>
             </div>
@@ -110,37 +149,62 @@
                  return window.location.href;
             }
                 
-            function executeCall(requestString) {
+            function executeCall(requestString, openinwindow) {
                 var fullURL = getRESTEndpoint() + requestString;
                 
-                document.getElementById('iframe2').src = fullURL;
+                if(openinwindow)
+                    window.open(fullURL);
+                else
+                    document.getElementById('iframe2').src = fullURL;
             }
 
             $("#cleardb").click(function () {	
                 var context = $('#context').val();
                 if(window.confirm("You really want to delete all data for '" + context + "'?")) {
-                    executeCall("api/cleardb?context=" + context);
+                    executeCall("api/cleardb?context=" + context, false);
                 }
             });            
+
+            $("#singlerun").click(function () {
+                if(window.confirm("You really want to run this single test? Just want to make sure!")) {
+                    var context = $('#context').val();
+                    var perfspec = $('#perfspec').val();
+                    var starttime = $('#starttime').val();
+                    var endtime = $('#endtime').val();
+                    var testRunName = $('#testRunName').val();
+                    var tags = $('#tags').val();
+                    var comparecontext = $('#comparecontext').val();
+                    executeCall(
+                        "api/singlerun?context=" + context + "&perfspec=" + perfspec + 
+                        "&start=" + starttime + "&end=" + endtime + "&testRunName=" + testRunName + 
+                        "&tags=" + tags + "&comparecontext=" + comparecontext, false);
+                }
+            });
             
-            $("#run").click(function () {
-                if(window.confirm("You really want to run this test? Just want to make sure!")) {
+            $("#multirun").click(function () {
+                if(window.confirm("You really want to run these multiple test? Just want to make sure!")) {
                     var context = $('#context').val();
                     var perfspec = $('#perfspec').val();
                     var start = $('#start').val();
                     var length = $('#length').val();
                     var count = $('#count').val();
+                    var testRunPrefix = $('#testRunPrefix').val();
                     var testRunIx = $('#testRunIx').val();
                     var tags = $('#tags').val();
                     var comparecontext = $('#comparecontext').val();
-                    executeCall("api/run?context=" + context + "&perfspec=" + perfspec + "&start=" + start + "&length=" + length + "&count=" + count + "&testRunIx=" + testRunIx + "&tags=" + tags + "&comparecontext=" + comparecontext);
+                    executeCall(
+                        "api/multirun?context=" + context + "&perfspec=" + perfspec + 
+                        "&start=" + start + "&length=" + length + "&count=" + count + 
+                        "&testRunPrefix=" + testRunPrefix + "&testRunIx=" + testRunIx + 
+                        "&tags=" + tags + "&comparecontext=" + comparecontext, false);
                 }
             });
 
             $("#report").click(function () {	
                 var context = $('#context').val();
                 var reportquery = $('#reportquery').val();
-                executeCall("api/report?context=" + context + "&reportquery=" + reportquery);
+                var openinwindow = $("#openinwindow")[0].checked;
+                executeCall("api/report?context=" + context + "&reportquery=" + reportquery, openinwindow);
             });                 
         </script>
 
