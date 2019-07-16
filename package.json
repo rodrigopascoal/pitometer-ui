@@ -8,7 +8,7 @@
     "build": "npx tsc",
     "docs": "npx typedoc --module commonjs --out docs/ --exclude '**/__tests__/*' --readme README.md src/ && touch docs/.nojekyll",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start" : "node index.js"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -31,6 +31,7 @@
     "pitometer": "file:../pitometer",
     "pitometer-grader-thresholds": "file:../pitometer-grader-thresholds",
     "pitometer-source-dynatrace": "file:../pitometer-source-dynatrace",
+    "pitometer-source-prometheus": "file:../pitometer-source-prometheus",
     "tslint": "^5.15.0",
     "tslint-config-airbnb": "^5.11.1",
     "typescript": "^3.4.2"
@@ -38,6 +39,7 @@
   "dependencies": {
     "@keptn/pitometer": "^1.1.0",
     "@keptn/pitometer-grader-threshold": "^1.1.0",
-    "@keptn/pitometer-source-dynatrace": "^1.0.1"
+    "@keptn/pitometer-source-dynatrace": "^1.0.1",
+    "@keptn/pitometer-source-prometheus": "^1.0.0"
   }
 }

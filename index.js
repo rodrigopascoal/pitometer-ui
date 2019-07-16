@@ -1,5 +1,6 @@
 const Pitometer = require("@keptn/pitometer").Pitometer;
 const DynatraceSource = require("@keptn/pitometer-source-dynatrace").Source;
+const PrometheusSource = require("@keptn/pitometer-source-prometheus").Source
 const ThresholdGrader = require("@keptn/pitometer-grader-threshold").Grader;
 const MongoDbAccess = require("@keptn/pitometer").MongoDbAccess;
 const Reporter = require("./dist/Reporter").Reporter;
@@ -8,7 +9,7 @@ var http = require('http');
 var https = require('https');
 
 // Load Secrets and Config!
-const dynatraceSecrets = require("./secrets.json");
+const sourceSecrets = require("./secrets.json");
 const config = require("./config.json");
 var mongodb = null;
 
@@ -20,19 +21,26 @@ if (config.mongodb && config.mongodb != null) {
 }
 
 // 2: Add Dynatrace Data Source
-if (dynatraceSecrets.DynatraceUrl && dynatraceSecrets.DynatraceToken) {
+if (sourceSecrets.DynatraceUrl && sourceSecrets.DynatraceToken) {
+  console.log("Adding Dynatrace Data Source");
   pitometer.addSource(
     "Dynatrace",
     new DynatraceSource({
-      baseUrl: dynatraceSecrets.DynatraceUrl,
-      apiToken: dynatraceSecrets.DynatraceToken
+      baseUrl: sourceSecrets.DynatraceUrl,
+      apiToken: sourceSecrets.DynatraceToken
       // log: console.log,
     })
   );
 } else {
-  dynatraceSecrets = { DynatraceUrl: "https://yourdynatracetenant", DynatraceToken: "YOUR_API_TOKEN" };
+  var dynatraceSecrets = { DynatraceUrl: "https://yourdynatracetenant", DynatraceToken: "YOUR_API_TOKEN" };
   console.log("No Dynatrace Credentials provided in secrets.json. Expecting the following format: " + JSON.stringify(dynatraceSecrets));
   return;
+}
+
+// 3: Add Prometheus Data Source
+if (sourceSecrets.PrometheusQueryUrl) {
+  console.log("Adding Prometheus Data Source");
+  pitometer.addSource("Prometheus", new PrometheusSource(sourceSecrets.PrometheusQueryUrl));
 }
 
 // 3: Add Threshold Grader
