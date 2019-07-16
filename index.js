@@ -33,14 +33,16 @@ if (sourceSecrets.DynatraceUrl && sourceSecrets.DynatraceToken) {
   );
 } else {
   var dynatraceSecrets = { DynatraceUrl: "https://yourdynatracetenant", DynatraceToken: "YOUR_API_TOKEN" };
-  console.log("No Dynatrace Credentials provided in secrets.json. Expecting the following format: " + JSON.stringify(dynatraceSecrets));
-  return;
+  console.log("INFO: No Dynatrace Data Source configured as expected Dynatrace config data missing in secrets.json: " + JSON.stringify(dynatraceSecrets));
+  // return;
 }
 
 // 3: Add Prometheus Data Source
 if (sourceSecrets.PrometheusQueryUrl) {
   console.log("Adding Prometheus Data Source");
   pitometer.addSource("Prometheus", new PrometheusSource(sourceSecrets.PrometheusQueryUrl));
+} else {
+  console.log("INFO: No Prometheus Data Source configured as PrometheusQueryUrl missing in secrets.json")
 }
 
 // 3: Add Threshold Grader
