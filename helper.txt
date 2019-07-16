@@ -2,8 +2,11 @@ npx tsc -w
 
 
 todos
+* include prometheus!
 * mongoose -> ORM Mapper
 * Move from Collection per Context to "Single Collection" with Key on Context
+* implement "data only indicators" -> these are indicators that are not graded!
+* implement "always fail" indicators -> indicators that when violating the thresholds will fail the build!
 
 Ideas
 * Mark a testrun as "Baseline Run" -> "Flag" individual test runs with a status, e.g: "ingore", "baseline", "xyz"

@@ -97,7 +97,8 @@ You need to create the following config files
 secrects.json:
 {
     "DynatraceToken" : "YOUR_TOKEN",
-    "DynatraceUrl" : "https://XXXXX.live.dynatrace.com"
+    "DynatraceUrl" : "https://XXXXX.live.dynatrace.com",
+    "PrometheusQueryUrl : "<prometheus query url>
 }
 
 config.json:

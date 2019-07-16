@@ -1,0 +1,35 @@
+{
+    "spec_version": "1.1",
+    "indicators": [
+      {
+        "id": "go_gc_duration_avg",
+        "source": "Prometheus",
+        "query": "avg(go_gc_duration_seconds)",
+        "output": "total",
+        "grading": {
+          "type": "Threshold",
+          "thresholds": {
+            "upperSevere": 21802344
+          },
+          "metricScore": 20
+        }
+      },
+      {
+        "id": "go_gc_duration",
+        "source": "Prometheus",
+        "query": "go_gc_duration_seconds",
+        "output": "total",
+        "grading": {
+          "type": "Threshold",
+          "thresholds": {
+            "upperSevere": 21802344
+          },
+          "metricScore": 20
+        }
+      }
+    ],
+    "objectives": {
+      "pass": 30,
+      "warning": 20
+    }
+  }
