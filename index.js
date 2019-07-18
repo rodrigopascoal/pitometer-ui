@@ -350,7 +350,7 @@ var server = http.createServer(function (req, res) {
           else {
             // replace buildnumber and background color
             indexhtml = fs.readFileSync('./resources/index.html').toString()
-            finalHtml = indexhtml.replace("MONGODB", config.mongodb).replace("DYNATRACEURL", dynatraceSecrets.DynatraceUrl).replace("SELFURL", "http://localhost:" + config.port);
+            finalHtml = indexhtml.replace("MONGODB", config.mongodb).replace("DYNATRACEURL", sourceSecrets.DynatraceUrl).replace("SELFURL", "http://localhost:" + config.port);
           }
 
           res.write(finalHtml);
